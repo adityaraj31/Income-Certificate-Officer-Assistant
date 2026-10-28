@@ -7,9 +7,11 @@ from app.db import engine, create_db_and_tables
 from app import models
 
 
+from app.auth import hash_password
+
 OFFICERS = [
-    {"name": "राजेश कुमार", "designation": "लेखपाल", "username": "rajesh_kumar"},
-    {"name": "आशा देवी", "designation": "तहसीलदार सहायक", "username": "asha_devi"},
+    {"name": "राजेश कुमार", "designation": "लेखपाल", "username": "rajesh_kumar", "password": "rajesh123"},
+    {"name": "आशा देवी", "designation": "तहसीलदार सहायक", "username": "asha_devi", "password": "asha123"},
 ]
 
 FIRST_NAMES = ["रामकुमार", "सीता", "मोहन", "गायत्री", "अजय", "पूजा", "विनोद", "सुनिता", "राकेश", "कविता", "शिवकुमार", "नीतू", "मनीष", "अनिता", "सुरेश", "रीमा", "ओमप्रकाश", "शारदा", "दिलीप", "सरोज", "भानु", "मीरा", "हरिओम", "लता", "योगेश"]
@@ -25,7 +27,7 @@ AADHAAR_NAMES_DIFF = ["रामकुंवर", "सीतादेवी", "�
 def seed_all(session: Session):
     # Officers
     for o in OFFICERS:
-        session.add(models.Officer(name=o["name"], designation=o["designation"], username=o["username"]))
+        session.add(models.Officer(name=o["name"], designation=o["designation"], username=o["username"], password_hash=hash_password(o.get("password", "pass123"))))
     session.commit()
 
     officers = session.exec(select(models.Officer)).all()

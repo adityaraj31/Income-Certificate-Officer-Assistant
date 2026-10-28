@@ -8,6 +8,7 @@ class Officer(SQLModel, table=True):
     name: str
     designation: str
     username: str
+    password_hash: str = Field(default="")
     created_at: datetime = Field(default_factory=lambda: datetime.now(timezone.utc))
 
 

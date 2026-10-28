@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>डैशबोर्ड - आय प्रमाण पत्र सहायक</title>
+    <script src="https://unpkg.com/htmx.org@1.9.12"></script>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-50">
+    <nav class="bg-white shadow p-4 flex justify-between">
+        <div class="font-bold">आय प्रमाण पत्र – अधिकारी सहायक</div>
+        <div>{{ officer.name }} ({{ officer.designation }}) | <a href="/logout" class="text-blue-600">लॉगआउट</a></div>
+    </nav>
+    <div class="max-w-7xl mx-auto p-4">
+        <h1 class="text-xl font-bold mb-4">डैशबोर्ड</h1>
+        <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-4">
+            <div class="bg-white p-4 rounded shadow"><div class="text-gray-600">कुल लंबित</div><div class="text-2xl font-bold">{{ total_pending }}</div></div>
+            <div class="bg-white p-4 rounded shadow"><div class="text-gray-600">आज अंतिम तिथि</div><div class="text-2xl font-bold">{{ today_final }}</div></div>
+            <div class="bg-white p-4 rounded shadow"><div class="text-gray-600">चेतावनी वाले</div><div class="text-2xl font-bold">{{ warning }}</div></div>
+            <div class="bg-white p-4 rounded shadow"><div class="text-gray-600">वापस भेजे गए</div><div class="text-2xl font-bold">{{ returned }}</div></div>
+        </div>
+        <div class="mb-4 flex gap-2">
+            <button hx-get="/dashboard" hx-target="#queue" hx-swap="innerHTML" class="px-3 py-1 bg-gray-200 rounded">सभी</button>
+            <button hx-get="/dashboard?filter=today" hx-target="#queue" hx-swap="innerHTML" class="px-3 py-1 bg-gray-200 rounded">आज अंतिम तिथि</button>
+            <button hx-get="/dashboard?filter=warning" hx-target="#queue" hx-swap="innerHTML" class="px-3 py-1 bg-gray-200 rounded">चेतावनी वाले</button>
+            <button hx-get="/dashboard?filter=returned" hx-target="#queue" hx-swap="innerHTML" class="px-3 py-1 bg-gray-200 rounded">वापस भेजे गए</button>
+        </div>
+        <div id="queue">
+            <div class="bg-white rounded shadow overflow-x-auto">
+                <table class="w-full">
+                    <thead class="bg-gray-100">
+                        <tr>
+                            <th class="p-2 text-left">आवेदन संख्या</th>
+                            <th class="p-2 text-left">आवेदक</th>
+                            <th class="p-2 text-left">पिता का नाम</th>
+                            <th class="p-2 text-left">गांव/तहसील</th>
+                            <th class="p-2 text-left">कारण</th>
+                            <th class="p-2 text-left">प्राथमिकता</th>
+                            <th class="p-2 text-left">कार्रवाई</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for item in items %}
+                        <tr class="border-t">
+                            <td class="p-2">{{ item.app.id }}</td>
+                            <td class="p-2">{{ item.app.applicant_name_hi }}</td>
+                            <td class="p-2">{{ item.app.father_name_hi }}</td>
+                            <td class="p-2">{{ item.app.village }}, {{ item.app.tehsil }}</td>
+                            <td class="p-2">{{ item.reason }}</td>
+                            <td class="p-2">{{ item.priority }}</td>
+                            <td class="p-2"><a href="/applications/{{ item.app.id }}" class="text-blue-600">देखें</a></td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
